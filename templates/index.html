@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="mb-8">
+  <h2 class="text-3xl font-bold mb-4">Ultimi Post</h2>
+  <ul>
+  {% for post in posts %}
+    <li class="mb-2">
+      <a href="{{ base_url }}{{ post.url }}" class="text-xl text-blue-600 hover:underline">{{ post.title }}</a>
+      <span class="text-sm text-gray-500"> - {{ post.date }}</span>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endblock %}
