@@ -1,0 +1,16 @@
+# config.yml
+
+# URL di base usato per generare tutti i link del sito (terminare sempre con slash)
+base_url: "https://tuo-dominio.com/"
+
+# Directory di output del sito statico
+output_dir: "site/"
+
+# Cartelle di contenuto
+content:
+  pages: "content/pages/"
+  posts: "content/posts/"
+
+# Titolo del sito (opzionale)
+site:
+  title: "Il Mio Blog"
