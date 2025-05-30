@@ -69,7 +69,7 @@ _BASE_HTML = f"""<!DOCTYPE html>
       </nav>
     </header>
     <main>
-      {{{{ block content }}}}{{{{ endblock }}}}
+      {% block content %}{% endblock %}
     </main>
     <footer class="mt-12 text-center text-sm text-gray-500">
       &copy; {{{{ now.year }}}} {SITE_TITLE}. Tutti i diritti riservati.
@@ -192,4 +192,3 @@ def main():
     print(f"Generazione completata in [{OUTPUT_DIR}]/ con template in [templates]/. Base URL: {BASE_URL}")
 
 if __name__ == '__main__':
-    main()
