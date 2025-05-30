@@ -2,7 +2,7 @@
 """
 Generatore di sito statico da file Markdown, con styling basato su Tailwind CSS.
 Legge la configurazione da config.yml per base_url, cartelle di contenuto e directory di output.
-Crea automaticamente i template di base (se non esistono) e genera pagine e post.
+Crea automaticamente i template di base (se non esistono), genera sample content se mancante, e genera pagine e post.
 Struttura consigliata:
 .
 ├── content
@@ -39,20 +39,31 @@ CONTENT_PAGES   = Path(config['content']['pages'])
 CONTENT_POSTS   = Path(config['content']['posts'])
 SITE_TITLE      = config.get('site', {}).get('title', 'Il Mio Blog')
 
-# Template di default aggiornati con base_url e site_title
+# Se cartelle mancanti o vuote, crea sample content
+for dir_path, sample_file, sample_content in [
+    (CONTENT_PAGES, 'about.md', '# About\n\nBenvenuto sul mio blog! Scrivi qui le informazioni sulla tua pagina About.'),
+    (CONTENT_POSTS, f"{datetime.now().strftime('%Y-%m-%d')}-hello-world.md", '# Hello World\n\nQuesto è il tuo primo post! Scrivilo in Markdown.'),
+]:
+    dir_path.mkdir(parents=True, exist_ok=True)
+    if not any(dir_path.iterdir()):
+        sample_path = dir_path / sample_file
+        sample_path.write_text(sample_content, encoding='utf-8')
+        print(f"Creato sample: {sample_path}")
+
+# Template di default con BASE_URL e SITE_TITLE
 _BASE_HTML = f"""<!DOCTYPE html>
-<html lang="it"> 
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{{{ title }}}}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans"> 
-  <div class="container mx-auto px-4 py-8"> 
-    <header class="mb-8"> 
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8">
       <h1 class="text-4xl font-bold"><a href="{BASE_URL}" class="text-blue-600 hover:underline">{SITE_TITLE}</a></h1>
-      <nav class="mt-4"> 
+      <nav class="mt-4">
         <a href="{BASE_URL}" class="mr-4 hover:text-blue-600">Home</a>
         <a href="{BASE_URL}about.html" class="hover:text-blue-600">About</a>
       </nav>
@@ -60,7 +71,7 @@ _BASE_HTML = f"""<!DOCTYPE html>
     <main>
       {{{{ block content }}}}{{{{ endblock }}}}
     </main>
-    <footer class="mt-12 text-center text-sm text-gray-500"> 
+    <footer class="mt-12 text-center text-sm text-gray-500">
       &copy; {{{{ now.year }}}} {SITE_TITLE}. Tutti i diritti riservati.
     </footer>
   </div>
@@ -124,7 +135,7 @@ def load_templates():
     return env
 
 def render_pages(env):
-    """Genera le pagine statiche da content/pages"""
+    """Genera le pagine statiche da CONTENT_PAGES"""
     for md_file in CONTENT_PAGES.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
         html_content = markdown.markdown(text, extensions=['fenced_code'])
@@ -137,7 +148,7 @@ def render_pages(env):
         out_file.write_text(html, encoding='utf-8')
 
 def render_posts(env):
-    """Genera i post da content/posts e ritorna metadata"""
+    """Genera i post da CONTENT_POSTS e ritorna metadata"""
     posts = []
     for md_file in CONTENT_POSTS.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
@@ -168,10 +179,6 @@ def render_index(env, posts):
     out_file.write_text(html, encoding='utf-8')
 
 def main():
-    # Verifica struttura
-    if not CONTENT_PAGES.exists() or not CONTENT_POSTS.exists():
-        print("Errore: cartelle 'content/pages' o 'content/posts' mancanti.")
-        return
     init_templates()
     env = load_templates()
     # Pulisce output
