@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Generatore di sito statico da file Markdown, con styling basato su Tailwind CSS.
+Legge la configurazione da config.yml per base_url, cartelle di contenuto e directory di output.
 Crea automaticamente i template di base (se non esistono) e genera pagine e post.
 Struttura consigliata:
 .
@@ -12,44 +13,55 @@ Struttura consigliata:
 │   ├── page.html
 │   ├── post.html
 │   └── index.html
+├── config.yml     # configurazione di base_url, directory etc.
 └── generate_site.py  # questo script
 """
+import sys
 import shutil
 from pathlib import Path
+import yaml
 import markdown
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 
-# Percorsi
-CONTENT_DIR   = Path('content')
-PAGES_DIR     = CONTENT_DIR / 'pages'
-POSTS_DIR     = CONTENT_DIR / 'posts'
-TEMPLATES_DIR = Path('templates')
-OUTPUT_DIR    = Path('site')
+# Carica configurazione
+CONFIG_PATH = Path('config.yml')
+if not CONFIG_PATH.exists():
+    print("Errore: file 'config.yml' non trovato.")
+    sys.exit(1)
+with CONFIG_PATH.open(encoding='utf-8') as f:
+    config = yaml.safe_load(f)
 
-# Template di default
-_BASE_HTML = """<!DOCTYPE html>
-<html lang="it">
+# Parametri da config
+BASE_URL        = config.get('base_url', '/')
+OUTPUT_DIR      = Path(config.get('output_dir', 'site/'))
+CONTENT_PAGES   = Path(config['content']['pages'])
+CONTENT_POSTS   = Path(config['content']['posts'])
+SITE_TITLE      = config.get('site', {}).get('title', 'Il Mio Blog')
+
+# Template di default aggiornati con base_url e site_title
+_BASE_HTML = f"""<!DOCTYPE html>
+<html lang="it"> 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }}</title>
+  <title>{{{{ title }}}}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans">
-  <div class="container mx-auto px-4 py-8">
-    <header class="mb-8">
-      <h1 class="text-4xl font-bold"><a href="/" class="text-blue-600 hover:underline">Il Mio Blog</a></h1>
-      <nav class="mt-4">
-        <a href="/" class="mr-4 hover:text-blue-600">Home</a>
-        <a href="/about.html" class="hover:text-blue-600">About</a>
+<body class="bg-gray-100 text-gray-900 font-sans"> 
+  <div class="container mx-auto px-4 py-8"> 
+    <header class="mb-8"> 
+      <h1 class="text-4xl font-bold"><a href="{BASE_URL}" class="text-blue-600 hover:underline">{SITE_TITLE}</a></h1>
+      <nav class="mt-4"> 
+        <a href="{BASE_URL}" class="mr-4 hover:text-blue-600">Home</a>
+        <a href="{BASE_URL}about.html" class="hover:text-blue-600">About</a>
       </nav>
     </header>
     <main>
-      {% block content %}{% endblock %}
+      {{{{ block content }}}}{{{{ endblock }}}}
     </main>
-    <footer class="mt-12 text-center text-sm text-gray-500">
-      &copy; {{ now.year }} Il Mio Blog. Tutti i diritti riservati.
+    <footer class="mt-12 text-center text-sm text-gray-500"> 
+      &copy; {{{{ now.year }}}} {SITE_TITLE}. Tutti i diritti riservati.
     </footer>
   </div>
 </body>
@@ -78,7 +90,7 @@ _INDEX_HTML = """{% extends 'base.html' %}
   <ul>
   {% for post in posts %}
     <li class="mb-2">
-      <a href="{{ post.url }}" class="text-xl text-blue-600 hover:underline">{{ post.title }}</a>
+      <a href="{{ base_url }}{{ post.url }}" class="text-xl text-blue-600 hover:underline">{{ post.title }}</a>
       <span class="text-sm text-gray-500"> - {{ post.date }}</span>
     </li>
   {% endfor %}
@@ -88,30 +100,32 @@ _INDEX_HTML = """{% extends 'base.html' %}
 
 def init_templates():
     """Crea i file di template se non esistono"""
-    TEMPLATES_DIR.mkdir(exist_ok=True)
+    Path('templates').mkdir(exist_ok=True)
     templates = {
-        'base.html':   _BASE_HTML,
-        'page.html':   _PAGE_HTML,
-        'post.html':   _POST_HTML,
-        'index.html':  _INDEX_HTML,
+        'base.html':  _BASE_HTML,
+        'page.html':  _PAGE_HTML,
+        'post.html':  _POST_HTML,
+        'index.html': _INDEX_HTML,
     }
     for name, content in templates.items():
-        path = TEMPLATES_DIR / name
+        path = Path('templates') / name
         if not path.exists():
             path.write_text(content, encoding='utf-8')
 
 def load_templates():
     env = Environment(
-        loader=FileSystemLoader(str(TEMPLATES_DIR)),
+        loader=FileSystemLoader('templates'),
         trim_blocks=True,
         lstrip_blocks=True,
     )
     env.globals['now'] = datetime.now()
+    env.globals['base_url'] = BASE_URL
+    env.globals['site_title'] = SITE_TITLE
     return env
 
 def render_pages(env):
     """Genera le pagine statiche da content/pages"""
-    for md_file in PAGES_DIR.glob('*.md'):
+    for md_file in CONTENT_PAGES.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
         html_content = markdown.markdown(text, extensions=['fenced_code'])
         lines = text.splitlines()
@@ -125,7 +139,7 @@ def render_pages(env):
 def render_posts(env):
     """Genera i post da content/posts e ritorna metadata"""
     posts = []
-    for md_file in POSTS_DIR.glob('*.md'):
+    for md_file in CONTENT_POSTS.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
         html_content = markdown.markdown(text, extensions=['fenced_code'])
         lines = text.splitlines()
@@ -155,8 +169,8 @@ def render_index(env, posts):
 
 def main():
     # Verifica struttura
-    if not CONTENT_DIR.exists():
-        print("Errore: crea la cartella 'content' con sottocartelle 'pages' e 'posts' e i tuoi .md.")
+    if not CONTENT_PAGES.exists() or not CONTENT_POSTS.exists():
+        print("Errore: cartelle 'content/pages' o 'content/posts' mancanti.")
         return
     init_templates()
     env = load_templates()
@@ -168,7 +182,7 @@ def main():
     render_pages(env)
     posts = render_posts(env)
     render_index(env, posts)
-    print("Generazione completata in [site]/ con template in [templates]/")
+    print(f"Generazione completata in [{OUTPUT_DIR}]/ con template in [templates]/. Base URL: {BASE_URL}")
 
 if __name__ == '__main__':
     main()
