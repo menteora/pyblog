@@ -33,16 +33,16 @@ with CONFIG_PATH.open(encoding='utf-8') as f:
     config = yaml.safe_load(f)
 
 # Parametri da config
-BASE_URL        = config.get('base_url', '/')
-OUTPUT_DIR      = Path(config.get('output_dir', 'site/'))
-CONTENT_PAGES   = Path(config['content']['pages'])
-CONTENT_POSTS   = Path(config['content']['posts'])
-SITE_TITLE      = config.get('site', {}).get('title', 'Il Mio Blog')
+BASE_URL      = config.get('base_url', '/')
+OUTPUT_DIR    = Path(config.get('output_dir', 'site/'))
+CONTENT_PAGES = Path(config['content']['pages'])
+CONTENT_POSTS = Path(config['content']['posts'])
+SITE_TITLE    = config.get('site', {}).get('title', 'Il Mio Blog')
 
 # Se cartelle mancanti o vuote, crea sample content
 for dir_path, sample_file, sample_content in [
     (CONTENT_PAGES, 'about.md', '# About\n\nBenvenuto sul mio blog! Scrivi qui le informazioni sulla tua pagina About.'),
-    (CONTENT_POSTS, f"{datetime.now().strftime('%Y-%m-%d')}-hello-world.md", '# Hello World\n\nQuesto è il tuo primo post! Scrivilo in Markdown.'),
+    (CONTENT_POSTS, f"{datetime.now():%Y-%m-%d}-hello-world.md", '# Hello World\n\nQuesto è il tuo primo post! Scrivilo in Markdown.'),
 ]:
     dir_path.mkdir(parents=True, exist_ok=True)
     if not any(dir_path.iterdir()):
@@ -69,7 +69,7 @@ _BASE_HTML = f"""<!DOCTYPE html>
       </nav>
     </header>
     <main>
-      {% block content %}{% endblock %}
+      {{% block content %}}{{% endblock %}}
     </main>
     <footer class="mt-12 text-center text-sm text-gray-500">
       &copy; {{{{ now.year }}}} {SITE_TITLE}. Tutti i diritti riservati.
