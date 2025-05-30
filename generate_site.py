@@ -192,3 +192,4 @@ def main():
     print(f"Generazione completata in [{OUTPUT_DIR}]/ con template in [templates]/. Base URL: {BASE_URL}")
 
 if __name__ == '__main__':
+    main()
