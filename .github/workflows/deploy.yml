@@ -5,7 +5,9 @@ on:
     branches: 
       - main
 
-jobs: build-and-deploy: runs-on: ubuntu-latest
+jobs: 
+  build-and-deploy: 
+    runs-on: ubuntu-latest
 
 steps:
   # Checkout the repository
