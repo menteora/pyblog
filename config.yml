@@ -1,7 +1,7 @@
 # config.yml
 
 # URL di base usato per generare tutti i link del sito (terminare sempre con slash)
-base_url: "https://tuo-dominio.com/"
+base_url: "https://menteora.github.io/pyblog/"
 
 # Directory di output del sito statico
 output_dir: "site/"
