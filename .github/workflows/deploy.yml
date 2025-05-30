@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install markdown jinja2 yaml
+          pip install requirements.txt
 
       # Generate static site
       - name: Generate site
