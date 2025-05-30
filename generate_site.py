@@ -50,82 +50,22 @@ for dir_path, sample_file, sample_content in [
         sample_path.write_text(sample_content, encoding='utf-8')
         print(f"Creato sample: {sample_path}")
 
-# Template di default con BASE_URL e SITE_TITLE
-_BASE_HTML = f"""<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{{{ title }}}}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-900 font-sans">
-  <div class="container mx-auto px-4 py-8">
-    <header class="mb-8">
-      <h1 class="text-4xl font-bold"><a href="{BASE_URL}" class="text-blue-600 hover:underline">{SITE_TITLE}</a></h1>
-      <nav class="mt-4">
-        <a href="{BASE_URL}" class="mr-4 hover:text-blue-600">Home</a>
-        <a href="{BASE_URL}about.html" class="hover:text-blue-600">About</a>
-      </nav>
-    </header>
-    <main>
-      {{% block content %}}{{% endblock %}}
-    </main>
-    <footer class="mt-12 text-center text-sm text-gray-500">
-      &copy; {{{{ now.year }}}} {SITE_TITLE}. Tutti i diritti riservati.
-    </footer>
-  </div>
-</body>
-</html>"""
+TEMPLATE_DIR = Path('templates')
 
-_PAGE_HTML = """{% extends 'base.html' %}
-{% block content %}
-<article class="prose lg:prose-xl bg-white p-8 rounded shadow">
-  {{ content | safe }}
-</article>
-{% endblock %}"""
-
-_POST_HTML = """{% extends 'base.html' %}
-{% block content %}
-<article class="prose lg:prose-xl bg-white p-8 rounded shadow">
-  <h2 class="text-2xl font-bold mb-2">{{ title }}</h2>
-  <p class="text-sm text-gray-500 mb-4">{{ date }}</p>
-  {{ content | safe }}
-</article>
-{% endblock %}"""
-
-_INDEX_HTML = """{% extends 'base.html' %}
-{% block content %}
-<section class="mb-8">
-  <h2 class="text-3xl font-bold mb-4">Ultimi Post</h2>
-  <ul>
-  {% for post in posts %}
-    <li class="mb-2">
-      <a href="{{ base_url }}{{ post.url }}" class="text-xl text-blue-600 hover:underline">{{ post.title }}</a>
-      <span class="text-sm text-gray-500"> - {{ post.date }}</span>
-    </li>
-  {% endfor %}
-  </ul>
-</section>
-{% endblock %}"""
-
-def init_templates():
-    """Crea i file di template se non esistono"""
-    Path('templates').mkdir(exist_ok=True)
-    templates = {
-        'base.html':  _BASE_HTML,
-        'page.html':  _PAGE_HTML,
-        'post.html':  _POST_HTML,
-        'index.html': _INDEX_HTML,
-    }
-    for name, content in templates.items():
-        path = Path('templates') / name
-        if not path.exists():
-            path.write_text(content, encoding='utf-8')
+def ensure_templates():
+    """Verifica la presenza dei template richiesti"""
+    required = ['base.html', 'page.html', 'post.html', 'index.html']
+    if not TEMPLATE_DIR.exists():
+        print("Errore: cartella 'templates' non trovata.")
+        sys.exit(1)
+    missing = [f for f in required if not (TEMPLATE_DIR / f).exists()]
+    if missing:
+        print(f"Errore: mancano i seguenti template: {', '.join(missing)}")
+        sys.exit(1)
 
 def load_templates():
     env = Environment(
-        loader=FileSystemLoader('templates'),
+        loader=FileSystemLoader(str(TEMPLATE_DIR)),
         trim_blocks=True,
         lstrip_blocks=True,
     )
@@ -179,7 +119,7 @@ def render_index(env, posts):
     out_file.write_text(html, encoding='utf-8')
 
 def main():
-    init_templates()
+    ensure_templates()
     env = load_templates()
     # Pulisce output
     if OUTPUT_DIR.exists():

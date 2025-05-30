@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold"><a href="{{ base_url }}" class="text-blue-600 hover:underline">{{ site_title }}</a></h1>
+      <nav class="mt-4">
+        <a href="{{ base_url }}" class="mr-4 hover:text-blue-600">Home</a>
+        <a href="{{ base_url }}about.html" class="hover:text-blue-600">About</a>
+      </nav>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="mt-12 text-center text-sm text-gray-500">
+      &copy; {{ now.year }} {{ site_title }}. Tutti i diritti riservati.
+    </footer>
+  </div>
+</body>
+</html>
