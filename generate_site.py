@@ -75,7 +75,7 @@ def load_templates():
     return env
 
 def render_pages(env):
-    """Genera le pagine statiche da CONTENT_PAGES"""
+    """Genera le pagine statiche da CONTENT_PAGES e copia i Markdown"""
     for md_file in CONTENT_PAGES.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
         html_content = markdown.markdown(text, extensions=['fenced_code'])
@@ -86,9 +86,13 @@ def render_pages(env):
         html = tpl.render(title=title, content=html_content)
         out_file.parent.mkdir(parents=True, exist_ok=True)
         out_file.write_text(html, encoding='utf-8')
+        # Conserva anche i sorgenti markdown nella cartella di output
+        md_out = OUTPUT_DIR / 'pages' / md_file.name
+        md_out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(md_file, md_out)
 
 def render_posts(env):
-    """Genera i post da CONTENT_POSTS e ritorna metadata"""
+    """Genera i post da CONTENT_POSTS, copia i sorgenti Markdown e ritorna metadata"""
     posts = []
     for md_file in CONTENT_POSTS.glob('*.md'):
         text = md_file.read_text(encoding='utf-8')
@@ -103,6 +107,10 @@ def render_posts(env):
         out_file = OUTPUT_DIR / url
         out_file.parent.mkdir(parents=True, exist_ok=True)
         out_file.write_text(html, encoding='utf-8')
+        # Copia il file markdown originale
+        md_out = OUTPUT_DIR / 'posts' / md_file.name
+        md_out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(md_file, md_out)
         posts.append({'title': title, 'date': date, 'url': url})
     posts.sort(key=lambda x: x['date'], reverse=True)
     return posts
@@ -118,6 +126,15 @@ def render_index(env, posts):
     out_file = OUTPUT_DIR / 'index.html'
     out_file.write_text(html, encoding='utf-8')
 
+def render_index_markdown(posts):
+    """Crea un file Markdown con la lista dei post"""
+    lines = [f"# {SITE_TITLE}", ""]
+    for p in posts:
+        line = f"- [{p['title']}]({BASE_URL}{p['url']}) - {p['date'].strftime('%d %B %Y')}"
+        lines.append(line)
+    md_out = OUTPUT_DIR / 'index.md'
+    md_out.write_text("\n".join(lines), encoding='utf-8')
+
 def main():
     ensure_templates()
     env = load_templates()
@@ -129,6 +146,7 @@ def main():
     render_pages(env)
     posts = render_posts(env)
     render_index(env, posts)
+    render_index_markdown(posts)
     print(f"Generazione completata in [{OUTPUT_DIR}]/ con template in [templates]/. Base URL: {BASE_URL}")
 
 if __name__ == '__main__':
