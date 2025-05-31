@@ -34,6 +34,9 @@ if not CONFIG_PATH.exists():
 with CONFIG_PATH.open(encoding='utf-8') as f:
     config = yaml.safe_load(f)
 
+# Plugin attivi elencati nel file di configurazione
+PLUGINS = config.get('plugins', [])
+
 # Parametri da config
 BASE_URL      = config.get('base_url', '/')
 OUTPUT_DIR    = Path(config.get('output_dir', 'site/'))
@@ -66,11 +69,12 @@ def ensure_templates():
         sys.exit(1)
 
 def load_plugins():
-    """Carica i plugin presenti nella cartella plugins"""
+    """Carica solo i plugin indicati in config.yml"""
     head, body = [], []
     if not PLUGINS_DIR.exists():
         return {'head': head, 'body': body}
-    for plugin_dir in PLUGINS_DIR.iterdir():
+    for name in PLUGINS:
+        plugin_dir = PLUGINS_DIR / name
         if not plugin_dir.is_dir():
             continue
         head_file = plugin_dir / 'head.html'
@@ -82,10 +86,11 @@ def load_plugins():
     return {'head': head, 'body': body}
 
 def copy_plugin_static():
-    """Copia eventuali cartelle static dei plugin nell'output"""
+    """Copia eventuali cartelle static dei plugin attivi"""
     if not PLUGINS_DIR.exists():
         return
-    for plugin_dir in PLUGINS_DIR.iterdir():
+    for name in PLUGINS:
+        plugin_dir = PLUGINS_DIR / name
         static_dir = plugin_dir / 'static'
         if static_dir.is_dir():
             dest = OUTPUT_DIR / 'plugins' / plugin_dir.name
@@ -100,6 +105,7 @@ def load_templates():
     env.globals['now'] = datetime.now()
     env.globals['base_url'] = BASE_URL
     env.globals['site_title'] = SITE_TITLE
+    env.globals['config'] = config
     plugins = load_plugins()
     env.globals['plugins_head'] = [env.from_string(s).render() for s in plugins['head']]
     env.globals['plugins_body'] = [env.from_string(s).render() for s in plugins['body']]

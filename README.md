@@ -34,3 +34,15 @@ plugins/
 
 I frammenti possono usare le variabili dei template Jinja2, ad esempio
 `{{ base_url }}`.
+
+Per attivare i plugin è sufficiente indicarne il nome nella chiave `plugins` di `config.yml`. Ogni voce deve corrispondere al nome di una cartella presente sotto `plugins/`.
+
+Esempio:
+
+```yaml
+plugins:
+  - example
+  - cookieconsent
+```
+
+Il plugin `cookieconsent` integra la libreria [cookieconsent](https://github.com/orestbida/cookieconsent) e carica Google Analytics solo dopo il consenso. L'ID di tracciamento va specificato nella variabile `COOKIECONSENT_GA_ID` sempre nel file di configurazione.
