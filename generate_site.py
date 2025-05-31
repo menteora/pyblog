@@ -24,6 +24,8 @@ import markdown
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 
+PLUGINS_DIR = Path('plugins')
+
 # Carica configurazione
 CONFIG_PATH = Path('config.yml')
 if not CONFIG_PATH.exists():
@@ -63,6 +65,32 @@ def ensure_templates():
         print(f"Errore: mancano i seguenti template: {', '.join(missing)}")
         sys.exit(1)
 
+def load_plugins():
+    """Carica i plugin presenti nella cartella plugins"""
+    head, body = [], []
+    if not PLUGINS_DIR.exists():
+        return {'head': head, 'body': body}
+    for plugin_dir in PLUGINS_DIR.iterdir():
+        if not plugin_dir.is_dir():
+            continue
+        head_file = plugin_dir / 'head.html'
+        body_file = plugin_dir / 'body.html'
+        if head_file.exists():
+            head.append(head_file.read_text(encoding='utf-8'))
+        if body_file.exists():
+            body.append(body_file.read_text(encoding='utf-8'))
+    return {'head': head, 'body': body}
+
+def copy_plugin_static():
+    """Copia eventuali cartelle static dei plugin nell'output"""
+    if not PLUGINS_DIR.exists():
+        return
+    for plugin_dir in PLUGINS_DIR.iterdir():
+        static_dir = plugin_dir / 'static'
+        if static_dir.is_dir():
+            dest = OUTPUT_DIR / 'plugins' / plugin_dir.name
+            shutil.copytree(static_dir, dest, dirs_exist_ok=True)
+
 def load_templates():
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
@@ -72,6 +100,9 @@ def load_templates():
     env.globals['now'] = datetime.now()
     env.globals['base_url'] = BASE_URL
     env.globals['site_title'] = SITE_TITLE
+    plugins = load_plugins()
+    env.globals['plugins_head'] = [env.from_string(s).render() for s in plugins['head']]
+    env.globals['plugins_body'] = [env.from_string(s).render() for s in plugins['body']]
     return env
 
 def render_pages(env):
@@ -142,6 +173,7 @@ def main():
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
+    copy_plugin_static()
     # Genera pagine e post
     render_pages(env)
     posts = render_posts(env)
