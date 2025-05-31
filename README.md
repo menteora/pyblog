@@ -46,3 +46,22 @@ plugins:
 ```
 
 Il plugin `cookieconsent` integra la libreria [cookieconsent](https://github.com/orestbida/cookieconsent) e carica Google Analytics solo dopo il consenso. L'ID di tracciamento va specificato nella variabile `COOKIECONSENT_GA_ID` sempre nel file di configurazione.
+
+## Cartella `static`
+
+Nel repository è presente anche una cartella `static/` destinata a eventuali
+asset statici globali del sito. Contiene un semplice README solo per mantenere
+la directory sotto version control.
+
+## Test
+
+Prima di generare il sito è consigliato eseguire i test automatici tramite lo
+script `run_tests.py`:
+
+```bash
+python run_tests.py
+```
+
+Lo script esegue i test del core e quindi quelli dei plugin elencati in
+`config.yml`. Ogni plugin può definire i propri test nella cartella
+`plugins/<nome>/tests/`.
