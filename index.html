@@ -7,6 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Example plugin header snippet -->
 <link rel="stylesheet" href="https://menteora.github.io/pyblog/plugins/example/static/example.css">
+  <!-- CookieConsent plugin header snippet -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css">
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans">
   <div class="container mx-auto px-4 py-8">
@@ -34,5 +36,45 @@
   </div>
   <!-- Example plugin body snippet -->
 <script>console.log('Plugin example active');</script>
+  <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var cc = initCookieConsent();
+  cc.run({
+    guiOptions: {
+      consentModal: { layout: 'cloud', position: 'bottom center' },
+      preferencesModal: { layout: 'box' }
+    },
+    categories: {
+      necessary: { enabled: true, readOnly: true },
+      analytics: {}
+    },
+    onFirstAction: function(user_preferences, cookie){
+      if (cc.allowedCategory('analytics')) {
+        loadAnalytics();
+      }
+    },
+    onAccept: function(cookie){
+      if (cc.allowedCategory('analytics')) {
+        loadAnalytics();
+      }
+    }
+  });
+
+  function loadAnalytics(){
+    if (!window.ga_loaded){
+      var s = document.createElement('script');
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+      s.async = true;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+      window.ga_loaded = true;
+    }
+  }
+});
+</script>
 </body>
 </html>
