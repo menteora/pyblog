@@ -22,3 +22,11 @@ def test_example_static_copy(monkeypatch, tmp_path):
     generate_site.copy_plugin_static()
     expected = tmp_path / 'plugins' / 'example' / 'example.css'
     assert expected.exists()
+
+def test_example_snippet_in_generated_site(monkeypatch, tmp_path):
+    monkeypatch.setattr(generate_site, 'PLUGINS', ['example'])
+    monkeypatch.setattr(generate_site, 'OUTPUT_DIR', tmp_path)
+    generate_site.main()
+    html = (tmp_path / 'index.html').read_text(encoding='utf-8')
+    assert 'Plugin example active' in html
+    assert 'plugins/example/static/example.css' in html
