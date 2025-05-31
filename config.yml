@@ -14,3 +14,11 @@ content:
 # Titolo del sito (opzionale)
 site:
   title: "Il Mio Blog"
+
+# Plugin attivi (nomi delle cartelle sotto plugins/)
+plugins:
+  - example
+  - cookieconsent
+
+# Variabili specifiche dei plugin
+COOKIECONSENT_GA_ID: "G-XXXXXXXXXX"
