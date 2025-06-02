@@ -14,6 +14,9 @@ content:
 # Titolo del sito (opzionale)
 site:
   title: "Il Mio Blog"
+  hero_image_url: "" # URL for the hero image
+
+posts_per_page: 5
 
 # Plugin attivi (nomi delle cartelle sotto plugins/)
 plugins:

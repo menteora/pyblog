@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}All Tags - {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="mb-8">
+  <h2 class="text-3xl font-bold mb-6">All Tags</h2>
+  {% if tags %}
+  <ul class="list-disc pl-5 space-y-2">
+    {% for tag_info in tags %}
+    <li>
+      <a href="{{ base_url }}{{ tag_info.url }}" class="text-xl text-blue-600 hover:underline">
+        {{ tag_info.name }}
+      </a>
+      <span class="text-gray-600">({{ tag_info.count }} post{% if tag_info.count > 1 %}s{% endif %})</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No tags found.</p>
+  {% endif %}
+</section>
+{% endblock %}

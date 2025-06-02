@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
+
+{% if config.site.hero_image_url %}
+<section class="mb-8 text-center">
+  <img src="{{ config.site.hero_image_url }}" alt="Hero Image" class="mx-auto max-w-full h-auto" style="max-height: 400px;">
+</section>
+{% endif %}
+
 <section class="mb-8">
   <h2 class="text-3xl font-bold mb-4">Ultimi Post</h2>
   <ul>
@@ -11,4 +18,24 @@
   {% endfor %}
   </ul>
 </section>
+
+{% if total_pages > 1 %}
+<nav aria-label="Pagination" class="mt-8 flex justify-center">
+  {% if current_page > 1 %}
+    <a href="{{ base_url }}{% if current_page == 2 %}index.html{% else %}page/{{ current_page - 1 }}.html{% endif %}" class="mr-2 px-3 py-1 border rounded hover:bg-gray-200">Previous</a>
+  {% endif %}
+
+  {% for page_num in range(1, total_pages + 1) %}
+    <a href="{{ base_url }}{% if page_num == 1 %}index.html{% else %}page/{{ page_num }}.html{% endif %}"
+       class="mr-2 px-3 py-1 border rounded {% if page_num == current_page %}bg-blue-500 text-white{% else %}hover:bg-gray-200{% endif %}">
+      {{ page_num }}
+    </a>
+  {% endfor %}
+
+  {% if current_page < total_pages %}
+    <a href="{{ base_url }}page/{{ current_page + 1 }}.html" class="px-3 py-1 border rounded hover:bg-gray-200">Next</a>
+  {% endif %}
+</nav>
+{% endif %}
+
 {% endblock %}
