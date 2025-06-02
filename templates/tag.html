@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Posts tagged with '{{ tag_name }}' - {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="mb-8">
+  <h2 class="text-3xl font-bold mb-6">Posts tagged with '{{ tag_name }}'</h2>
+  {% if posts %}
+  <ul>
+    {% for post in posts %}
+    <li class="mb-4">
+      <h3 class="text-2xl font-semibold">
+        <a href="{{ base_url }}{{ post.url }}" class="text-blue-600 hover:underline">{{ post.title }}</a>
+      </h3>
+      <p class="text-sm text-gray-500">{{ post.date.strftime('%d %B %Y') }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No posts found with this tag.</p>
+  {% endif %}
+</section>
+
+<p class="mt-8">
+  <a href="{{ base_url }}tags.html" class="text-blue-600 hover:underline">&larr; View all tags</a>
+</p>
+{% endblock %}
