@@ -38,6 +38,7 @@
   <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+try {
   var cc = initCookieConsent();
   cc.run({
     guiOptions: {
@@ -49,14 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
       analytics: {}
     },
     onFirstAction: function(user_preferences, cookie){
-      if (cc.allowedCategory('analytics')) {
-        loadAnalytics();
-      }
+      // if (cc.allowedCategory('analytics')) {
+      //   loadAnalytics();
+      // }
     },
     onAccept: function(cookie){
-      if (cc.allowedCategory('analytics')) {
-        loadAnalytics();
-      }
+      // if (cc.allowedCategory('analytics')) {
+      //   loadAnalytics();
+      // }
     }
   });
 
@@ -74,6 +75,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 });
+} catch (error) {
+  console.error("CookieConsent Initialization Error:", error);
+}
 </script>
 </body>
 </html>
