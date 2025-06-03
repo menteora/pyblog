@@ -4,15 +4,15 @@
 
 {% block content %}
 <section class="mb-5">
-  <h2 class="title is-3 mb-5">All Tags</h2>
+  <h2 class="h3 mb-5">All Tags</h2>
   {% if tags %}
-  <ul>
+  <ul class="list-unstyled">
     {% for tag_info in tags %}
     <li class="mb-2">
-      <a href="{{ base_url }}{{ tag_info.url }}" class="is-size-5">
+      <a href="{{ base_url }}{{ tag_info.url }}" class="fs-5 text-decoration-none">
         {{ tag_info.name }}
       </a>
-      <span class="has-text-grey">({{ tag_info.count }} post{% if tag_info.count > 1 %}s{% endif %})</span>
+      <span class="text-muted">({{ tag_info.count }} post{% if tag_info.count > 1 %}s{% endif %})</span>
     </li>
     {% endfor %}
   </ul>
