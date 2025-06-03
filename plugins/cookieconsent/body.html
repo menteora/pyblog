@@ -1,40 +1,87 @@
-<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  var cc = initCookieConsent();
-  cc.run({
+<script type="module">
+  import 'https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js';
+
+  // Enable dark mode
+  document.documentElement.classList.add('cc--darkmode');
+
+  CookieConsent.run({
     guiOptions: {
-      consentModal: { layout: 'cloud', position: 'bottom center' },
-      preferencesModal: { layout: 'box' }
+        consentModal: {
+            layout: "box",
+            position: "bottom left",
+            equalWeightButtons: true,
+            flipButtons: false
+        },
+        preferencesModal: {
+            layout: "box",
+            position: "right",
+            equalWeightButtons: true,
+            flipButtons: false
+        }
     },
     categories: {
-      necessary: { enabled: true, readOnly: true },
-      analytics: {}
+        necessary: {
+            readOnly: true
+        },
+        analytics: {} // Users can opt-in to this category
     },
-    onFirstAction: function(user_preferences, cookie){
-      if (cc.allowedCategory('analytics')) {
-        loadAnalytics();
+    language: {
+        default: "it",
+        autoDetect: "browser",
+        translations: {
+            it: {
+                consentModal: {
+                    title: "Ciao viaggiatore, è tempo di biscotti!",
+                    description: "Questo sito utilizza cookie per migliorare la tua esperienza. Accetta per continuare.",
+                    acceptAllBtn: "Accetta tutto",
+                    acceptNecessaryBtn: "Rifiuta tutto",
+                    showPreferencesBtn: "Gestisci preferenze",
+                    footer: '<a href="{{ base_url }}privacy-policy.html">Informativa sulla privacy</a>\\n<a href="{{ base_url }}terms-conditions.html">Termini e condizioni</a>'
+                },
+                preferencesModal: {
+                    title: "Centro preferenze per il consenso",
+                    acceptAllBtn: "Accetta tutto",
+                    acceptNecessaryBtn: "Rifiuta tutto",
+                    savePreferencesBtn: "Salva le preferenze",
+                    closeIconLabel: "Chiudi la finestra",
+                    serviceCounterLabel: "Servizi",
+                    sections: [
+                        {
+                            title: "Utilizzo dei Cookie",
+                            description: "Utilizziamo i cookie per personalizzare i contenuti, fornire funzionalità dei social media e analizzare il nostro traffico. Leggi la nostra informativa sulla privacy per maggiori dettagli."
+                        },
+                        {
+                            title: "Cookie Strettamente Necessari <span class=\\"pm__badge\\">Sempre Attivati</span>",
+                            description: "Questi cookie sono essenziali per il funzionamento del sito e non possono essere disattivati.",
+                            linkedCategory: "necessary"
+                        },
+                        {
+                            title: "Cookie Analitici",
+                            description: "Questi cookie ci aiutano a capire come i visitatori interagiscono con il sito raccogliendo e riportando informazioni in modo anonimo.",
+                            linkedCategory: "analytics"
+                        },
+                        {
+                            title: "Ulteriori informazioni",
+                            description: 'Per qualsiasi domanda in relazione alla mia politica sui cookie e alle tue scelte, per favore <a class="cc__link" href="{{ base_url }}contact.html">contattami</a>.'
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    // Example of how to handle analytics if the user opts in:
+    onChange: function ({changedCategories, cookie}) {
+      if (changedCategories.includes('analytics') && cookie.categories.includes('analytics')) {
+        // Placeholder for analytics loading function if needed in the future
+        // e.g., loadGoogleAnalytics();
+        console.log('Analytics category consented.');
       }
     },
-    onAccept: function(cookie){
-      if (cc.allowedCategory('analytics')) {
-        loadAnalytics();
-      }
+    onFirstConsent: function({cookie}){
+        console.log('First consent action:', cookie);
+        if(cookie.categories.includes('analytics')){
+            console.log('Analytics consented on first action.');
+        }
     }
   });
-
-  function loadAnalytics(){
-    if (!window.ga_loaded){
-      var s = document.createElement('script');
-      s.src = 'https://www.googletagmanager.com/gtag/js?id={{ config.COOKIECONSENT_GA_ID }}';
-      s.async = true;
-      document.head.appendChild(s);
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '{{ config.COOKIECONSENT_GA_ID }}');
-      window.ga_loaded = true;
-    }
-  }
-});
 </script>
