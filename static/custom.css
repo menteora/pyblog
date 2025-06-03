@@ -1,0 +1,38 @@
+/* Custom styles for Bulma's 'content' class */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    margin-bottom: 0.75em; /* Ensure consistent bottom margin for headings */
+    font-weight: 600; /* Slightly bolder headings by default */
+}
+
+.content p {
+    margin-bottom: 1.25em; /* More spacious paragraphs */
+    line-height: 1.7;   /* Improved line height for readability */
+}
+
+.content ul, .content ol {
+    margin-left: 2em;     /* Standard indentation for lists */
+    margin-bottom: 1.25em;
+}
+
+.content li {
+    margin-bottom: 0.5em; /* Spacing between list items */
+}
+
+.content blockquote {
+    background-color: hsl(0, 0%, 96%); /* Default Bulma grey for blockquotes */
+    border-left: 5px solid hsl(0, 0%, 86%); /* Default Bulma grey-light for border */
+    padding: 1em 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.content a {
+    /* If you want to customize link color within .content.
+       Bulma's default is often fine. Example:
+       color: hsl(217, 71%, 53%);
+    */
+    /* text-decoration: underline; /* Uncomment if you always want underlines */
+}
+
+.content hr {
+    margin: 2em 0; /* More spacing around horizontal rules */
+}

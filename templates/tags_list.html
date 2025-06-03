@@ -3,16 +3,16 @@
 {% block title %}All Tags - {{ site_title }}{% endblock %}
 
 {% block content %}
-<section class="mb-8">
-  <h2 class="text-3xl font-bold mb-6">All Tags</h2>
+<section class="mb-5">
+  <h2 class="title is-3 mb-5">All Tags</h2>
   {% if tags %}
-  <ul class="list-disc pl-5 space-y-2">
+  <ul>
     {% for tag_info in tags %}
-    <li>
-      <a href="{{ base_url }}{{ tag_info.url }}" class="text-xl text-blue-600 hover:underline">
+    <li class="mb-2">
+      <a href="{{ base_url }}{{ tag_info.url }}" class="is-size-5">
         {{ tag_info.name }}
       </a>
-      <span class="text-gray-600">({{ tag_info.count }} post{% if tag_info.count > 1 %}s{% endif %})</span>
+      <span class="has-text-grey">({{ tag_info.count }} post{% if tag_info.count > 1 %}s{% endif %})</span>
     </li>
     {% endfor %}
   </ul>
