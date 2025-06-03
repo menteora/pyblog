@@ -19,6 +19,18 @@ python3 serve_site.py
 
 Il server utilizza la cartella `site/` e per default espone la porta `8000`.
 
+### Gestione ambienti
+
+Per sovrascrivere la `base_url` definita in `config.yml` senza modificare il file
+si può usare la variabile d'ambiente `PYBLOG_BASE_URL` oppure l'opzione
+`--base-url` dello script:
+
+```bash
+PYBLOG_BASE_URL=http://localhost:8000/ python3 generate_site.py
+# oppure
+python3 generate_site.py --base-url http://localhost:8000/
+```
+
 ## Plugin
 
 È possibile estendere il sito posizionando dei frammenti di codice HTML nella

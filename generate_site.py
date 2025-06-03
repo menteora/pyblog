@@ -23,6 +23,8 @@ import yaml
 import markdown
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
+import os
+import argparse
 
 PLUGINS_DIR = Path('plugins')
 
@@ -38,7 +40,7 @@ with CONFIG_PATH.open(encoding='utf-8') as f:
 PLUGINS = config.get('plugins', [])
 
 # Parametri da config
-BASE_URL      = config.get('base_url', '/')
+BASE_URL      = os.getenv('PYBLOG_BASE_URL', config.get('base_url', '/'))
 OUTPUT_DIR    = Path(config.get('output_dir', 'site/'))
 CONTENT_PAGES = Path(config['content']['pages'])
 CONTENT_POSTS = Path(config['content']['posts'])
@@ -353,4 +355,10 @@ def main():
     print(f"Generazione completata in [{OUTPUT_DIR}]/ con template in [templates]/. Base URL: {BASE_URL}")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Generate the static site")
+    parser.add_argument("--base-url", help="Override base_url from config or env")
+    args = parser.parse_args()
+
+    if args.base_url:
+        BASE_URL = args.base_url
     main()
