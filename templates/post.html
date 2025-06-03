@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-<article class="p-4 border rounded shadow-sm">
-  <h2 class="h3 mb-3">{{ title }}</h2>
-  <p class="small text-muted mb-4">{{ date }}</p>
-  {{ content | safe }}
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <article>
+                {{ content | safe }}
+            </article>
+            <hr class="my-4" /> {# Divider after the article content #}
 
-  {% if tags %}
-  <hr class="my-4">
-  <div class="mt-5">
-    <h3 class="h5 mb-2">Tags:</h3>
-    <div class="d-flex flex-wrap gap-2">
-      {% for tag in tags %}
-      <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="badge text-bg-light text-decoration-none">{{ tag }}</a>
-      {% endfor %}
+            {# Optional: Navigation for next/previous post #}
+            <div class="d-flex justify-content-between mb-4">
+                {% if prev_post %}
+                    <a class="btn btn-primary text-uppercase" href="{{ base_url }}{{ prev_post.path }}">← {{ prev_post.title }}</a>
+                {% else %}
+                    <span></span> {# Empty span to maintain space #}
+                {% endif %}
+                {% if next_post %}
+                    <a class="btn btn-primary text-uppercase" href="{{ base_url }}{{ next_post.path }}">{{ next_post.title }} →</a>
+                {% else %}
+                    <span></span> {# Empty span to maintain space #}
+                {% endif %}
+            </div>
+        </div>
     </div>
-  </div>
-  {% endif %}
-</article>
+</div>
 {% endblock %}
