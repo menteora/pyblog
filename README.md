@@ -85,3 +85,6 @@ python run_tests.py
 Lo script esegue i test del core e quindi quelli dei plugin elencati in
 `config.yml`. Ogni plugin può definire i propri test nella cartella
 `plugins/<nome>/tests/`.
+
+## Tailwindcss per la produzione
+https://tailwindbuild.programmerbee.com/
