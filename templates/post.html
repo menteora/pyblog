@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<article class="content is-large box">
-  <h2 class="title is-3 mb-3">{{ title }}</h2>
-  <p class="subtitle is-size-7 has-text-grey mb-4">{{ date }}</p>
+<article class="p-4 border rounded shadow-sm">
+  <h2 class="h3 mb-3">{{ title }}</h2>
+  <p class="small text-muted mb-4">{{ date }}</p>
   {{ content | safe }}
 
   {% if tags %}
-  <hr class="is-medium">
+  <hr class="my-4">
   <div class="mt-5">
-    <h3 class="title is-5 mb-2">Tags:</h3>
-    <div class="tags">
+    <h3 class="h5 mb-2">Tags:</h3>
+    <div class="d-flex flex-wrap gap-2">
       {% for tag in tags %}
-      <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="tag is-light">{{ tag }}</a>
+      <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="badge text-bg-light text-decoration-none">{{ tag }}</a>
       {% endfor %}
     </div>
   </div>

@@ -3,16 +3,16 @@
 {% block title %}Posts tagged with '{{ tag_name }}' - {{ site_title }}{% endblock %}
 
 {% block content %}
-<section class="mb-5"> {# Changed mb-8 to mb-5 for consistency #}
-  <h2 class="title is-3 mb-5">Posts tagged with '{{ tag_name }}'</h2>
+<section class="mb-5">
+  <h2 class="h3 mb-5">Posts tagged with '{{ tag_name }}'</h2>
   {% if posts %}
-  <ul>
+  <ul class="list-unstyled">
     {% for post in posts %}
     <li class="mb-4">
-      <h3 class="title is-4">
-        <a href="{{ base_url }}{{ post.url }}">{{ post.title }}</a>
+      <h3 class="h4">
+        <a href="{{ base_url }}{{ post.url }}" class="text-decoration-none">{{ post.title }}</a>
       </h3>
-      <p class="is-size-7 has-text-grey">{{ post.date.strftime('%d %B %Y') }}</p>
+      <p class="small text-muted">{{ post.date.strftime('%d %B %Y') }}</p>
     </li>
     {% endfor %}
   </ul>
@@ -22,6 +22,6 @@
 </section>
 
 <p class="mt-5">
-  <a href="{{ base_url }}tags.html">&larr; View all tags</a>
+  <a href="{{ base_url }}tags.html" class="text-decoration-none">&larr; View all tags</a>
 </p>
 {% endblock %}

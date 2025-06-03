@@ -4,33 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ base_url }}static/custom.css">
   {% for snippet in plugins_head %}
   {{ snippet | safe }}
   {% endfor %}
 </head>
 <body>
-  <nav class="navbar is-light has-shadow" role="navigation" aria-label="main navigation">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" role="navigation" aria-label="main navigation">
     <div class="container">
-      <div class="navbar-brand">
-        <a href="{{ base_url }}" class="navbar-item is-size-4">{{ site_title }}</a>
-
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-          <a href="{{ base_url }}" class="navbar-item">Home</a>
-          <a href="{{ base_url }}about.html" class="navbar-item">About</a>
-          <a href="{{ base_url }}tags.html" class="navbar-item">Tags</a>
-        </div>
-
-        <div class="navbar-end">
+      <a href="{{ base_url }}" class="navbar-brand fs-4">{{ site_title }}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasicExample" aria-controls="navbarBasicExample" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarBasicExample">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a href="{{ base_url }}" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="{{ base_url }}about.html" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="{{ base_url }}tags.html" class="nav-link">Tags</a></li>
+        </ul>
+        <div class="navbar-nav ms-auto">
           <!-- Future elements can go here -->
         </div>
       </div>
@@ -38,22 +31,22 @@
   </nav>
 
 {% if config.site.hero_image_url %}
-<section class="hero is-medium">
-  <div class="hero-body" style="background-image: url('{{ config.site.hero_image_url }}'); background-size: cover; background-position: center;">
-    <!-- Removed img tag, using background image on hero-body -->
+<section class="py-5 mb-4 bg-light rounded-3">
+  <div style="background-image: url('{{ config.site.hero_image_url }}'); background-size: cover; background-position: center; min-height: 300px;">
+    <!-- Adjusted to ensure hero has some height if empty, min-height can be adjusted -->
   </div>
 </section>
 {% endif %}
-<section class="section">
+<section class="py-5">
   <div class="container">
-    <main class="mt-8"> <!-- Added mt-8 to main to compensate for fixed header - consider if still needed with Bulma sections -->
+    <main class="mt-4">
       {% block content %}{% endblock %}
     </main>
   </div>
 </section>
-<footer class="footer has-text-centered is-size-7 has-text-grey">
+<footer class="footer text-center text-muted small py-3">
   <div class="container">
-    <div class="content">
+    <div>
       <p>&copy; {{ now.year }} {{ site_title }}. Tutti i diritti riservati.</p>
     </div>
   </div>
@@ -61,5 +54,6 @@
   {% for snippet in plugins_body %}
   {{ snippet | safe }}
   {% endfor %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
