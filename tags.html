@@ -1,26 +1,46 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
   <!-- Example plugin header snippet -->
 <link rel="stylesheet" href="https://menteora.github.io/pyblog/plugins/example/example.css">
   <!-- CookieConsent by Orest Bida CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans">
+  <header class="bg-base-200 shadow-lg">
+    <div class="navbar container mx-auto">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-ghost lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+          </label>
+          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a href="https://menteora.github.io/pyblog/">Home</a></li>
+            <li><a href="https://menteora.github.io/pyblog/about.html">About</a></li>
+            <li><a href="https://menteora.github.io/pyblog/tags.html">Tags</a></li>
+          </ul>
+        </div>
+        <a href="https://menteora.github.io/pyblog/" class="btn btn-ghost normal-case text-xl">Il Mio Blog</a>
+      </div>
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="https://menteora.github.io/pyblog/">Home</a></li>
+          <li><a href="https://menteora.github.io/pyblog/about.html">About</a></li>
+          <li><a href="https://menteora.github.io/pyblog/tags.html">Tags</a></li>
+        </ul>
+      </div>
+      <div class="navbar-end">
+        <!-- Future elements can go here -->
+      </div>
+    </div>
+  </header>
   <div class="container mx-auto px-4 py-8">
-    <header class="mb-8">
-      <h1 class="text-4xl font-bold"><a href="https://menteora.github.io/pyblog/" class="text-blue-600 hover:underline">Il Mio Blog</a></h1>
-      <nav class="mt-4">
-        <a href="https://menteora.github.io/pyblog/" class="mr-4 hover:text-blue-600">Home</a>
-        <a href="https://menteora.github.io/pyblog/about.html" class="mr-4 hover:text-blue-600">About</a>
-        <a href="https://menteora.github.io/pyblog/tags.html" class="hover:text-blue-600">Tags</a>
-      </nav>
-    </header>
-    <main>
+    <main class="mt-8"> <!-- Added mt-8 to main to compensate for fixed header -->
 <section class="mb-8">
   <h2 class="text-3xl font-bold mb-6">All Tags</h2>
   <p>No tags found.</p>
