@@ -30,6 +30,9 @@ if not site_dir.is_dir():
 # Change working directory so the HTTP server serves from the configured output directory
 os.chdir(site_dir)
 
+# Change working directory so the HTTP server serves from 'site'
+os.chdir(site_dir)
+
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     # Silence logging to keep output clean
     def log_message(self, format, *args):
