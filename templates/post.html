@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<article class="prose lg:prose-xl bg-white p-8 rounded shadow">
-  <h2 class="text-2xl font-bold mb-2">{{ title }}</h2>
-  <p class="text-sm text-gray-500 mb-4">{{ date }}</p>
+<article class="content is-large box">
+  <h2 class="title is-3 mb-3">{{ title }}</h2>
+  <p class="subtitle is-size-7 has-text-grey mb-4">{{ date }}</p>
   {{ content | safe }}
 
   {% if tags %}
-  <div class="mt-6 pt-4 border-t border-gray-300">
-    <h3 class="text-lg font-semibold mb-2">Tags:</h3>
-    <ul class="flex flex-wrap gap-2">
+  <hr class="is-medium">
+  <div class="mt-5">
+    <h3 class="title is-5 mb-2">Tags:</h3>
+    <div class="tags">
       {% for tag in tags %}
-      <li>
-        <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded-md">
-          {{ tag }}
-        </a>
-      </li>
+      <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="tag is-light">{{ tag }}</a>
       {% endfor %}
-    </ul>
+    </div>
   </div>
   {% endif %}
 </article>

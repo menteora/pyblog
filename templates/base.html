@@ -1,59 +1,63 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="light">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  <link rel="stylesheet" href="{{ base_url }}static/custom.css">
   {% for snippet in plugins_head %}
   {{ snippet | safe }}
   {% endfor %}
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans">
-  <header class="bg-base-200 shadow-lg">
-    <div class="navbar container mx-auto">
-      <div class="navbar-start">
-        <div class="dropdown">
-          <label tabindex="0" class="btn btn-ghost lg:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
-          </label>
-          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-            <li><a href="{{ base_url }}">Home</a></li>
-            <li><a href="{{ base_url }}about.html">About</a></li>
-            <li><a href="{{ base_url }}tags.html">Tags</a></li>
-          </ul>
+<body>
+  <nav class="navbar is-light has-shadow" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="{{ base_url }}" class="navbar-item is-size-4">{{ site_title }}</a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a href="{{ base_url }}" class="navbar-item">Home</a>
+          <a href="{{ base_url }}about.html" class="navbar-item">About</a>
+          <a href="{{ base_url }}tags.html" class="navbar-item">Tags</a>
         </div>
-        <a href="{{ base_url }}" class="btn btn-ghost normal-case text-xl">{{ site_title }}</a>
-      </div>
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
-          <li><a href="{{ base_url }}">Home</a></li>
-          <li><a href="{{ base_url }}about.html">About</a></li>
-          <li><a href="{{ base_url }}tags.html">Tags</a></li>
-        </ul>
-      </div>
-      <div class="navbar-end">
-        <!-- Future elements can go here -->
+
+        <div class="navbar-end">
+          <!-- Future elements can go here -->
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
 {% if config.site.hero_image_url %}
-<section class="w-full">
-  <div class="relative w-full pt-[56.25%]"> <!-- 16:9 Aspect Ratio -->
-    <img src="{{ config.site.hero_image_url }}" alt="{{ site_title }} hero image" class="absolute top-0 left-0 w-full h-full object-cover">
+<section class="hero is-medium">
+  <div class="hero-body" style="background-image: url('{{ config.site.hero_image_url }}'); background-size: cover; background-position: center;">
+    <!-- Removed img tag, using background image on hero-body -->
   </div>
 </section>
 {% endif %}
-  <div class="container mx-auto px-4 py-8">
-    <main class="mt-8"> <!-- Added mt-8 to main to compensate for fixed header -->
+<section class="section">
+  <div class="container">
+    <main class="mt-8"> <!-- Added mt-8 to main to compensate for fixed header - consider if still needed with Bulma sections -->
       {% block content %}{% endblock %}
     </main>
-    <footer class="mt-12 text-center text-sm text-gray-500">
-      &copy; {{ now.year }} {{ site_title }}. Tutti i diritti riservati.
-    </footer>
   </div>
+</section>
+<footer class="footer has-text-centered is-size-7 has-text-grey">
+  <div class="container">
+    <div class="content">
+      <p>&copy; {{ now.year }} {{ site_title }}. Tutti i diritti riservati.</p>
+    </div>
+  </div>
+</footer>
   {% for snippet in plugins_body %}
   {{ snippet | safe }}
   {% endfor %}
