@@ -9,7 +9,7 @@ in HTML utilizzando Jinja2 e Tailwind CSS.
 python3 generate_site.py
 ```
 
-Il risultato viene scritto nella cartella `site/`.
+Il risultato viene scritto nella cartella indicata da `output_dir` in `config.yml` (di default `site/`).
 
 Per visualizzare in locale il sito generato è disponibile lo script `serve_site.py`:
 
@@ -17,7 +17,7 @@ Per visualizzare in locale il sito generato è disponibile lo script `serve_site
 python3 serve_site.py
 ```
 
-Il server utilizza la cartella `site/` e per default espone la porta `8000`.
+Il server utilizza la stessa cartella indicata da `output_dir` (per default `site/`) e per default espone la porta `8000`.
 
 ### Gestione ambienti
 
@@ -39,7 +39,7 @@ file seguenti:
 
 - `head.html` – inserito nell'elemento `<head>` di ogni pagina.
 - `body.html` – inserito prima della chiusura di `<body>`.
-- `static/` – cartella opzionale che verrà copiata in `site/plugins/<nome>`.
+- `static/` – cartella opzionale che verrà copiata in `<output_dir>/plugins/<nome>` (dove `<output_dir>` è definito in `config.yml`).
 
 Esempio di struttura:
 
