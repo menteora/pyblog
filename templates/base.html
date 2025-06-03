@@ -38,6 +38,14 @@
       </div>
     </div>
   </header>
+
+{% if config.site.hero_image_url %}
+<section class="w-full">
+  <div class="relative w-full pt-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+    <img src="{{ config.site.hero_image_url }}" alt="{{ site_title }} hero image" class="absolute top-0 left-0 w-full h-full object-cover">
+  </div>
+</section>
+{% endif %}
   <div class="container mx-auto px-4 py-8">
     <main class="mt-8"> <!-- Added mt-8 to main to compensate for fixed header -->
       {% block content %}{% endblock %}
