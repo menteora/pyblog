@@ -9,3 +9,4 @@ def test_main_generates_output(monkeypatch, tmp_path):
     assert (output / 'index.html').exists()
     assert (output / 'about.html').exists()
     assert (output / 'posts').exists()
+    assert (output / 'styles.css').exists()
