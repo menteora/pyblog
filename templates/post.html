@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
-{% block content %}
-<article class="p-4 border rounded shadow-sm">
-  <h2 class="h3 mb-3">{{ title }}</h2>
-  <p class="small text-muted mb-4">{{ date }}</p>
-  {{ content | safe }}
-
-  {% if tags %}
-  <hr class="my-4">
-  <div class="mt-5">
-    <h3 class="h5 mb-2">Tags:</h3>
-    <div class="d-flex flex-wrap gap-2">
-      {% for tag in tags %}
-      <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="badge text-bg-light text-decoration-none">{{ tag }}</a>
-      {% endfor %}
+{% block header %}
+<header class="masthead" style="background-image: url('{{ config.site.hero_image_url }}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="post-heading">
+          <h1>{{ title }}</h1>
+          <span class="meta">{{ date }}</span>
+        </div>
+      </div>
     </div>
   </div>
-  {% endif %}
-</article>
+</header>
+{% endblock %}
+{% block content %}
+{{ content | safe }}
+
+{% if tags %}
+<hr class="my-4" />
+<div class="mt-5">
+  <h3 class="h5 mb-2">Tags:</h3>
+  <div class="d-flex flex-wrap gap-2">
+    {% for tag in tags %}
+    <a href="{{ base_url }}tags/{{ tag | slugify }}.html" class="badge bg-secondary text-decoration-none">{{ tag }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 {% endblock %}

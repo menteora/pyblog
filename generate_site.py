@@ -99,6 +99,18 @@ def copy_plugin_static():
             dest = OUTPUT_DIR / 'plugins' / plugin_dir.name
             shutil.copytree(static_dir, dest, dirs_exist_ok=True)
 
+def copy_global_static():
+    """Copia i file presenti nella cartella 'static' nella cartella di output"""
+    static_dir = Path('static')
+    if not static_dir.is_dir():
+        return
+    for item in static_dir.iterdir():
+        dest = OUTPUT_DIR / item.name
+        if item.is_dir():
+            shutil.copytree(item, dest, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, dest)
+
 def load_templates():
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
@@ -340,6 +352,7 @@ def main():
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
+    copy_global_static()
     copy_plugin_static()
     
     render_pages(env)

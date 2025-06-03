@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}All Tags - {{ site_title }}{% endblock %}
+{% block header %}
+<header class="masthead" style="background-image: url('{{ config.site.hero_image_url }}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>All Tags</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endblock %}
 
 {% block content %}
-<section class="mb-5">
-  <h2 class="h3 mb-5">All Tags</h2>
-  {% if tags %}
+{% if tags %}
   <ul class="list-unstyled">
     {% for tag_info in tags %}
     <li class="mb-2">
@@ -16,8 +26,7 @@
     </li>
     {% endfor %}
   </ul>
-  {% else %}
+{% else %}
   <p>No tags found.</p>
-  {% endif %}
-</section>
+{% endif %}
 {% endblock %}

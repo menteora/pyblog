@@ -29,4 +29,4 @@ def test_example_snippet_in_generated_site(monkeypatch, tmp_path):
     generate_site.main()
     html = (tmp_path / 'index.html').read_text(encoding='utf-8')
     assert 'Plugin example active' in html
-    assert 'plugins/example/static/example.css' in html
+    assert 'plugins/example/example.css' in html
