@@ -11,6 +11,14 @@ python3 generate_site.py
 
 Il risultato viene scritto nella cartella `site/`.
 
+Per visualizzare in locale il sito generato è disponibile lo script `serve_site.py`:
+
+```bash
+python3 serve_site.py
+```
+
+Il server utilizza la cartella `site/` e per default espone la porta `8000`.
+
 ## Plugin
 
 È possibile estendere il sito posizionando dei frammenti di codice HTML nella
