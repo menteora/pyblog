@@ -4,6 +4,7 @@ import http.server
 import socketserver
 import argparse
 from pathlib import Path
+import os
 
 DEFAULT_PORT = 8000
 
@@ -15,6 +16,9 @@ args = parser.parse_args()
 site_dir = Path(__file__).resolve().parent / "site"
 if not site_dir.is_dir():
     raise SystemExit(f"Cartella 'site' non trovata: {site_dir}")
+
+# Change working directory so the HTTP server serves from 'site'
+os.chdir(site_dir)
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     # Silence logging to keep output clean
