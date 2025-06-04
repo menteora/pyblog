@@ -12,13 +12,14 @@
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="https://menteora.github.io/pyblog/styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://menteora.github.io/pyblog/custom.css">
-    <style>
-      @media (max-width: 600px) {
-        header.masthead { background-image: url('images/hero-image-mobile.png'); }
-      }
-    </style>
   <!-- Example plugin header snippet -->
 <link rel="stylesheet" href="https://menteora.github.io/pyblog/plugins/example/example.css">
+    <style>
+    @media (max-width: 600px) {
+      header.masthead { background-image: url('images/hero-image-mobile.png'); }
+    }
+  </style>
+
   <!-- CookieConsent by Orest Bida CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
 </head>
@@ -40,7 +41,7 @@
     </div>
   </nav>
 
-<header class="masthead" style="background-image: url('images/hero-image.png');">
+<header class="masthead" >
   <div class="container px-4 px-lg-5 my-4 text-center">
     <div class="page-heading">
       <h1>All Tags</h1>
@@ -66,6 +67,7 @@
   <script>console.log('Example body.html test log directly in plugin file.');</script>
 <!-- Example plugin body snippet -->
 <script>console.log('Plugin example active');</script>
+  <!-- Hero image plugin active -->
   <script type="module">
   import 'https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js';
 
