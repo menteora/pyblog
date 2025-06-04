@@ -18,3 +18,14 @@ article blockquote {
 article hr {
     margin: 2em 0; /* More spacing around horizontal rules */
 }
+
+/* Hero background adjustments */
+header.masthead {
+    padding-top: 0;
+    padding-bottom: 0;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
