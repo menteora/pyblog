@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% block header %}
-<div class="container px-4 px-lg-5 my-4 text-center">
-  <img src="images/hero-image.png" alt="Hero image"
-       class="img-fluid rounded-top mx-auto mb-3">
-  <div class="site-heading">
-    <h1>{{ site_title }}</h1>
+<header class="masthead">
+  <div class="container px-4 px-lg-5 my-4 text-center">
+    <img src="{{ config.site.hero_image_url }}" alt="Hero image"
+         class="img-fluid rounded-top mx-auto mb-3">
+    <div class="site-heading">
+      <h1>{{ site_title }}</h1>
+    </div>
   </div>
-</div>
+</header>
 {% endblock %}
 {% block content %}
 {% for post in posts %}
