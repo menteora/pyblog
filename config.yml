@@ -14,7 +14,7 @@ content:
 # Titolo del sito (opzionale)
 site:
   title: "Il Mio Blog"
-  hero_image_url: "" # URL for the hero image
+  hero_image_url: "images/hero-image.png" # URL for the hero image
 
 posts_per_page: 5
 

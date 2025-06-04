@@ -25,10 +25,7 @@ from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 import os
 import argparse
-try:
-    from PIL import Image
-except ImportError:  # Pillow non installato
-    Image = None
+from PIL import Image
 import re
 
 PLUGINS_DIR = Path('plugins')
@@ -120,14 +117,6 @@ def optimize_images():
     """Genera versioni ottimizzate delle immagini presenti in static/images."""
     images_src = Path('static/images')
     if not images_src.is_dir():
-        return
-    if Image is None:
-        # Se Pillow non è disponibile, copia semplicemente le immagini
-        dest_dir = OUTPUT_DIR / 'images'
-        dest_dir.mkdir(parents=True, exist_ok=True)
-        for img_path in images_src.iterdir():
-            if img_path.is_file():
-                shutil.copy2(img_path, dest_dir / img_path.name)
         return
 
     dest_dir = OUTPUT_DIR / 'images'

@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<header class="masthead" style="background-image: url('{{ config.site.hero_image_url }}')">
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          <h1>All Tags</h1>
-        </div>
-      </div>
+<header class="masthead">
+  <div class="container px-4 px-lg-5 my-4 text-center">
+    <img src="{{ config.site.hero_image_url }}" alt="Hero image"
+         class="img-fluid rounded-top mx-auto mb-3">
+    <div class="page-heading">
+      <h1>All Tags</h1>
     </div>
   </div>
 </header>
