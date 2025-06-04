@@ -62,9 +62,11 @@ Esempio:
 ```yaml
 plugins:
   - example
+  - hero_image
   - cookieconsent
 ```
 
+Il plugin `hero_image` gestisce l'immagine principale del sito e l'intestazione dei post.
 Il plugin `cookieconsent` integra la libreria [cookieconsent](https://github.com/orestbida/cookieconsent) e carica Google Analytics solo dopo il consenso. L'ID di tracciamento va specificato nella variabile `COOKIECONSENT_GA_ID` sempre nel file di configurazione.
 
 ## Cartella `static`
