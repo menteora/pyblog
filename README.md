@@ -73,6 +73,15 @@ Nel repository è presente anche una cartella `static/` destinata a eventuali
 asset statici globali del sito. Contiene un semplice README solo per mantenere
 la directory sotto version control.
 
+### Ottimizzazione immagini
+
+Le immagini possono essere posizionate in `static/images/`. Durante la
+generazione del sito il comando `generate_site.py` copierà tali file nella
+cartella `images/` del sito e produrrà automaticamente versioni ridotte per
+mobile (`*-mobile`) e per desktop (`*-desktop`). Nei Markdown e nei template
+riferisci quindi le immagini con percorso `images/nomefile.ext` per ottenere
+una gestione responsive tramite `srcset`.
+
 ## Test
 
 Prima di generare il sito è consigliato eseguire i test automatici tramite lo

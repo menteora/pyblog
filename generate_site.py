@@ -25,6 +25,11 @@ from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 import os
 import argparse
+try:
+    from PIL import Image
+except ImportError:  # Pillow non installato
+    Image = None
+import re
 
 PLUGINS_DIR = Path('plugins')
 
@@ -111,18 +116,42 @@ def copy_global_static():
         else:
             shutil.copy2(item, dest)
 
-def load_templates():
-    env = Environment(
-        loader=FileSystemLoader(str(TEMPLATE_DIR)),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    env.globals['now'] = datetime.now()
-    env.globals['base_url'] = BASE_URL
-    env.globals['site_title'] = SITE_TITLE
-    env.globals['config'] = config
-    plugins = load_plugins()
-import re
+def optimize_images():
+    """Genera versioni ottimizzate delle immagini presenti in static/images."""
+    images_src = Path('static/images')
+    if not images_src.is_dir():
+        return
+    if Image is None:
+        # Se Pillow non è disponibile, copia semplicemente le immagini
+        dest_dir = OUTPUT_DIR / 'images'
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        for img_path in images_src.iterdir():
+            if img_path.is_file():
+                shutil.copy2(img_path, dest_dir / img_path.name)
+        return
+
+    dest_dir = OUTPUT_DIR / 'images'
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    for img_path in images_src.iterdir():
+        if not img_path.is_file():
+            continue
+        dest_original = dest_dir / img_path.name
+        shutil.copy2(img_path, dest_original)
+
+        if img_path.suffix.lower() not in {'.jpg', '.jpeg', '.png'}:
+            continue
+        try:
+            img = Image.open(img_path)
+        except Exception as e:
+            print(f"Errore apertura immagine {img_path}: {e}")
+            continue
+
+        for label, width in {'mobile': 480, 'desktop': 1280}.items():
+            resized = dest_dir / f"{img_path.stem}-{label}{img_path.suffix}"
+            im = img.copy()
+            im.thumbnail((width, width * 10000))
+            im.save(resized, optimize=True, quality=85)
 
 def slugify(value):
     """
@@ -151,6 +180,27 @@ def load_templates():
     env.globals['plugins_body'] = [env.from_string(s).render() for s in plugins['body']]
     return env
 
+def apply_responsive_images(html: str) -> str:
+    """Aggiunge attributi srcset per le immagini sotto 'images/'."""
+    pattern = re.compile(r'<img([^>]+)src="(?P<src>images/[^">]+)"([^>]*)>')
+
+    def repl(match):
+        src = match.group('src')
+        stem, ext = os.path.splitext(Path(src).name)
+        srcset = (
+            f"images/{stem}-mobile{ext} 480w, "
+            f"images/{stem}-desktop{ext} 1280w, "
+            f"images/{stem}{ext} 1920w"
+        )
+        replacement = (
+            f'<img{match.group(1)}src="images/{stem}-mobile{ext}" '
+            f'srcset="{srcset}" sizes="(max-width: 600px) 480px, 1280px"'
+            f'{match.group(3)}>'
+        )
+        return replacement
+
+    return pattern.sub(repl, html)
+
 def render_pages(env):
     """Genera le pagine statiche da CONTENT_PAGES e copia i Markdown"""
     for md_file in CONTENT_PAGES.glob('*.md'):
@@ -161,6 +211,7 @@ def render_pages(env):
         out_file = OUTPUT_DIR / f"{md_file.stem}.html"
         tpl = env.get_template('page.html')
         html = tpl.render(title=title, content=html_content)
+        html = apply_responsive_images(html)
         out_file.parent.mkdir(parents=True, exist_ok=True)
         out_file.write_text(html, encoding='utf-8')
         # Conserva anche i sorgenti markdown nella cartella di output
@@ -211,11 +262,12 @@ def render_posts(env):
         tpl = env.get_template('post.html')
         # Passa i dati del post, inclusi i tag, al template del singolo post
         html_page_content = tpl.render(
-            title=post_data['title'], 
-            date=post_data['date'].strftime('%d %B %Y'), 
+            title=post_data['title'],
+            date=post_data['date'].strftime('%d %B %Y'),
             content=post_data['content'],
             tags=post_data['tags'] # Assicurati che post.html possa usare questo
         )
+        html_page_content = apply_responsive_images(html_page_content)
         
         out_file = OUTPUT_DIR / url
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -265,6 +317,7 @@ def render_index(env, posts):
             out_file = page_dir / f'{page_num}.html'
         
         html = tpl.render(context)
+        html = apply_responsive_images(html)
         out_file.write_text(html, encoding='utf-8')
 
 def render_index_markdown(posts):
@@ -324,6 +377,7 @@ def render_tag_pages(env, all_tags_data):
             posts=posts_for_template, # Usa la lista con date formattate
             # title=f"Posts tagged with '{tag_info['name']}'" # Il titolo è gestito nel template
         )
+        html_content = apply_responsive_images(html_content)
         out_file = tags_output_dir / f"{slugified_tag}.html"
         out_file.write_text(html_content, encoding='utf-8')
 
@@ -342,6 +396,7 @@ def render_tags_list_page(env, all_tags_data):
         tags=tags_for_list_page,
         # title="All Tags" # Il titolo è gestito nel template
     )
+    html_content = apply_responsive_images(html_content)
     out_file = OUTPUT_DIR / 'tags.html'
     out_file.write_text(html_content, encoding='utf-8')
 
@@ -353,6 +408,7 @@ def main():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
     copy_global_static()
+    optimize_images()
     copy_plugin_static()
     
     render_pages(env)
