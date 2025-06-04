@@ -12,16 +12,6 @@
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="{{ base_url }}styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="{{ base_url }}custom.css">
-  {% set hero = config.site.hero_image_url %}
-  {% if hero %}
-    {% set parts = hero.rsplit('.', 1) %}
-    {% set hero_mobile = parts[0] ~ '-mobile.' ~ parts[1] %}
-    <style>
-      @media (max-width: 600px) {
-        header.masthead { background-image: url('{{ hero_mobile }}'); }
-      }
-    </style>
-  {% endif %}
   {% for snippet in plugins_head %}
   {{ snippet | safe }}
   {% endfor %}

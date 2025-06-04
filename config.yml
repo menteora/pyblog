@@ -21,6 +21,7 @@ posts_per_page: 5
 # Plugin attivi (nomi delle cartelle sotto plugins/)
 plugins:
   - example
+  - hero_image
   - cookieconsent
 
 # Variabili specifiche dei plugin
