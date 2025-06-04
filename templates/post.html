@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block header %}
-<header class="masthead">
+{% set hero = config.site.hero_image_url %}
+<header class="masthead" {% if hero %}style="background-image: url('{{ hero }}');"{% endif %}>
   <div class="container px-4 px-lg-5 my-4 text-center">
-    <img src="{{ config.site.hero_image_url }}" alt="Hero image"
-         class="img-fluid rounded-top mx-auto mb-3">
     <div class="post-heading">
       <h1>{{ title }}</h1>
       <span class="meta">{{ date }}</span>
